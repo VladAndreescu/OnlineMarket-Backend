@@ -1,0 +1,30 @@
+{
+  "name": "andreesv-mystuff-backend",
+  "version": "1.0.0",
+  "description": "My Stuff application backend for 304CEM coursework",
+  "main": "server.js",
+  "scripts": {
+	"start": "node server.js",
+	"server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.coventry.ac.uk/304CEM-1819OCTJAN/andreesv-MyStuff-Backend.git"
+  },
+  "author": "Vlad Andreescu",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.3.13",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "validator": "^10.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
