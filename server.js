@@ -4,6 +4,8 @@ const express = require('express')
 const BodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
+const users = require('./routes/users')
+
 const app = express()
 
 app.get('/', (req, res) => res.json({msg: 'it works'}))
@@ -19,5 +21,8 @@ mongoose.connect(db)
 
 //Server listening
 const port = process.env.PORT || 5000;
+
+//Declaring Routes
+app.use('/api/users', users)
 
 app.listen(port, () => console.log(`Server is currently running on port: ${port}`))
