@@ -11,6 +11,7 @@ const User = require('../src/users/models/User')
 
 //Call Validations
 const validateUserRegistrationInput = require('../validation/registration')
+const validateUserAuthenticationInput = require('../validation/authentication')
 
 
 const SALT_ROUNDS = 10
@@ -33,7 +34,8 @@ router.post('/register', (req,res) =>{
 	User.findOne({email: req.body.email})
 		.then(user =>{
 			if(user !== null){
-				return res.status(400).json({userEmail: 'Email already exists'})
+				errors.email = 'Email already exists'
+				return res.status(400).json(errors)
 			}else{
 				//create new user if the email does not exists in the database
 				const newUser = new User({
@@ -65,6 +67,14 @@ router.post('/register', (req,res) =>{
 //@acccess 	Public
 router.post('/login', (req, res) =>{
 
+	//using distructuring in order to extract errors and isValid
+	const { errors, isValid} = validateUserAuthenticationInput(req.body)
+
+	//Validation
+	if(!isValid){
+		return res.status(400).json(errors)
+	}
+
 	// store the user inputs into variables
 	const email = req.body.email
 	const password = req.body.password
@@ -73,7 +83,8 @@ router.post('/login', (req, res) =>{
 	User.findOne({email})
 		.then(user =>{
 			if(user === null){
-				return res.status(404).json({user: 'User not found'})
+				errors.email = 'User not found'
+				return res.status(404).json(errors)
 			}
 			//compare passwords in order to log in the user
 			bcrypt.compare(password, user.password)
@@ -92,7 +103,8 @@ router.post('/login', (req, res) =>{
 							})
 						})
 					}else{
-						return res.status(404).json({passwordError: 'Password incorrect'})
+						errors.password = 'Password incorrect'
+						return res.status(404).json(errors)
 					}
 				})
 		})
