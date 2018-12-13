@@ -82,5 +82,33 @@ router.delete('/:id',passport.authenticate('jwt', {session: false}) ,(req, res) 
 		
 })
 
+//@route 	POST api/posts/like/:id
+//@desc 	Like post
+//access 	Private
+router.post('/like/:id',passport.authenticate('jwt', {session: false}) ,(req, res) =>{
+	User.findOne({id: req.user.id})
+		.then(user =>{
+			Post.findById(req.params.id)
+				.then(post =>{
+					//check if the user already liked the post
+					if(post.likes.filter(like => like.user.toString() === req.user.id).length > 0){
+						return res.status(400).json({error: 'You cannot like the post more than once'})
+					}
+					
+					//Add the user id to the likes array
+					post.likes.unshift({ user: req.user.id })
+					
+					post.save()
+						.then(post => res.json(post))
+						
+					
+				})
+				.catch(err => res.status(404).json({error: 'Post could not be found with that ID'}))
+		})
+		
+})
+
+
+
 
 module.exports = router
