@@ -12,6 +12,7 @@ const User = require('../src/users/models/User')
 //Validation
 
 const validatePostInput = require('../validation/post')
+const validateBidInput = require('../validation/bid')
 
 //@route 	POST api/posts
 //@desc 	create a new post
@@ -143,6 +144,15 @@ router.post('/unlike/:id',passport.authenticate('jwt', {session: false}) ,(req, 
 //@desc 	Add a bit to a post
 //access 	Private
 router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, res) =>{
+	
+	const {errors, isValid} = validateBidInput(req.body)
+
+	//Validation
+	if(!isValid){
+		//If there are any errors return 400 status and error message
+		return res.status(404).json(errors)
+	}
+	
 	Post.findById(req.params.id)
 		.then(post =>{
 			const newBid = {
@@ -159,6 +169,34 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
 			post.save()
 				.then(post => res.json(post))
 		})
+		.catch(err => res.status(404).json({error: 'Post not found with that ID'}))
+})
+
+//@route 	DELETE api/posts/bid/:id/:bid_id
+//@desc 	DELETE a bit from a post
+//access 	Private
+router.delete('/bid/:id/:bid_id', passport.authenticate('jwt', {session: false}), (req, res) =>{
+	Post.findById(req.params.id)
+		.then(post =>{
+			
+			//Check if the bid exists in the database
+			if(post.bids.filter(bid => bid._id.toString() === req.params.bid_id).length === 0 ){
+				
+				return res.status(404).json({error: 'No bid found with that id'})
+			}
+
+			//Get delete index
+			const deleteIndex = post.bids
+				.map(item => item._id.toString())
+				.indexOf(req.params.bid_id)
+
+			//Splice bid from the bids array
+			post.bids.splice(deleteIndex, 1)
+
+			//Save the post in order to update the bids list
+			post.save().then(post => res.json(post))
+		})
+		.catch(err => res.status(404).json({error: 'Post not found with that ID'}))
 })
 
 
