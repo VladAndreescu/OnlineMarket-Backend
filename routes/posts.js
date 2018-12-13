@@ -139,6 +139,28 @@ router.post('/unlike/:id',passport.authenticate('jwt', {session: false}) ,(req, 
 		
 })
 
+//@route 	POST api/posts/bid/:id
+//@desc 	Add a bit to a post
+//access 	Private
+router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, res) =>{
+	Post.findById(req.params.id)
+		.then(post =>{
+			const newBid = {
+				value: req.body.value,
+				text: req.body.text,
+				name: req.body.name,
+				user: req.user.id
+			}
+
+			//Insert the new Bid into Bids array
+			post.bids.unshift(newBid);
+
+			//Save the post in order to update the bids list
+			post.save()
+				.then(post => res.json(post))
+		})
+})
+
 
 
 

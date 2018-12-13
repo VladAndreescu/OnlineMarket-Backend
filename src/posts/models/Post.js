@@ -38,7 +38,7 @@ const PostSchema = new Schema({
 			}
 		}
 	],
-	Bids:[
+	bids:[
 		{
 			user: {
 				type: Schema.Types.ObjectId,
