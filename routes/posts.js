@@ -100,13 +100,46 @@ router.post('/like/:id',passport.authenticate('jwt', {session: false}) ,(req, re
 					
 					post.save()
 						.then(post => res.json(post))
-						
+
 					
 				})
 				.catch(err => res.status(404).json({error: 'Post could not be found with that ID'}))
 		})
 		
 })
+
+//@route 	POST api/posts/unlike/:id
+//@desc 	Like post
+//access 	Private
+router.post('/unlike/:id',passport.authenticate('jwt', {session: false}) ,(req, res) =>{
+	User.findOne({id: req.user.id})
+		.then(user =>{
+			Post.findById(req.params.id)
+				.then(post =>{
+					//check if the user already liked the post
+					if(post.likes.filter(like => like.user.toString() === req.user.id).length == 0){
+						return res.status(400).json({error: 'You cannot remove the like if you did not liked this post'})
+					}
+					
+					//Get the delete index
+					const deleteIndex = post.likes
+						.map(item => item.user.toString())
+						.indexOf(req.user.id)
+
+					//remove the user from the likes array
+					post.likes.splice(deleteIndex, 1);
+
+					//Save the new updated post
+					post.save().then(post => res.json(post))
+
+					
+				})
+				.catch(err => res.status(404).json({error: 'Post could not be found with that ID'}))
+		})
+		
+})
+
+
 
 
 
