@@ -9,6 +9,9 @@ const passport = require('passport')
 //Load User Model
 const User = require('../src/users/models/User')
 
+//Call Validations
+const validateUserRegistrationInput = require('../validation/registration')
+
 
 const SALT_ROUNDS = 10
 router.get('/test', (req, res ) => res.json({msg: 'users router is working fine'}))
@@ -17,17 +20,28 @@ router.get('/test', (req, res ) => res.json({msg: 'users router is working fine'
 //@desc 	Register an user
 //@acccess 	Public
 router.post('/register', (req,res) =>{
+
+	//using distructuring in order to extract errors and isValid
+	const { errors, isValid} = validateUserRegistrationInput(req.body)
+
+	//Validation
+	if(!isValid){
+		return res.status(400).json(errors)
+	}
+
+	//check if the email already exists in the database
 	User.findOne({email: req.body.email})
 		.then(user =>{
 			if(user !== null){
 				return res.status(400).json({userEmail: 'Email already exists'})
 			}else{
+				//create new user if the email does not exists in the database
 				const newUser = new User({
 					name: req.body.name,
 					email: req.body.email,
 					password: req.body.password
 				})
-
+				//encrypt password using bcrypt
 				bcrypt.genSalt(SALT_ROUNDS, (err, salt) =>{
 					bcrypt.hash(newUser.password, salt, (err, hash) =>{
 						if(err){
