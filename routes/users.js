@@ -70,7 +70,7 @@ router.post('/login', (req, res) =>{
 						const payload = {id: user.id, name: user.name}
 
 						//Create the Sign Token - should expire in 1 hour for security reasons
-						jwt.sign(payload, keys.secret, {expiresIn: 3600}, (err, token) =>{
+						jwt.sign(payload, keys.secretOrKey, {expiresIn: 3600}, (err, token) =>{
 							res.json({
 								success: true,
 								message: 'Log in successfuly!',

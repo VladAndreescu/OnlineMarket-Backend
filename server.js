@@ -2,6 +2,7 @@
 
 const express = require('express')
 const BodyParser = require('body-parser')
+const passport = require('passport')
 const mongoose = require('mongoose')
 
 const users = require('./routes/users')
@@ -9,7 +10,7 @@ const posts = require('./routes/posts')
 
 const app = express()
 
-app.get('/', (req, res) => res.json({msg: 'it works'}))
+
 
 //Database confuguration and connection
 const db = require('./config/keys').MongoDbURI
@@ -22,6 +23,12 @@ mongoose.connect(db)
 //use Body parser
 app.use(BodyParser.urlencoded({extended:false}))
 app.use(BodyParser.json())
+
+//use Passport
+app.use(passport.initialize())
+
+//Passport Strategy
+require('./config/passport')(passport);
 
 
 
