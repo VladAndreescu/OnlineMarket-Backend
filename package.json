@@ -4,6 +4,8 @@
   "description": "My Stuff application backend for 304CEM coursework",
   "main": "server.js",
   "scripts": {
+	"test": "jest --coverage",
+	"watch": "node_modules/.bin/jest --coverage --watchAll",
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "cd ../andreesv-Mystuff-Frontend/client && npm start",
