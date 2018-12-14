@@ -140,10 +140,10 @@ router.post('/unlike/:id',passport.authenticate('jwt', {session: false}) ,(req, 
 		
 })
 
-//@route 	POST api/posts/bid/:id
-//@desc 	Add a bit to a post
+//@route 	POST api/posts/contact/:id
+//@desc 	Make an offer to a post
 //access 	Private
-router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, res) =>{
+router.post('/contact/:id', passport.authenticate('jwt', {session: false}), (req, res) =>{
 	
 	const {errors, isValid} = validateBidInput(req.body)
 
@@ -155,43 +155,43 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
 	
 	Post.findById(req.params.id)
 		.then(post =>{
-			const newBid = {
+			const newOffer = {
 				value: req.body.value,
 				text: req.body.text,
 				name: req.body.name,
 				user: req.user.id
 			}
 
-			//Insert the new Bid into Bids array
-			post.bids.unshift(newBid);
+			//Insert the new Offer into Offers array
+			post.offers.unshift(newOffer);
 
-			//Save the post in order to update the bids list
+			//Save the post in order to update the offers list
 			post.save()
 				.then(post => res.json(post))
 		})
 		.catch(err => res.status(404).json({error: 'Post not found with that ID'}))
 })
 
-//@route 	DELETE api/posts/bid/:id/:bid_id
-//@desc 	DELETE a bit from a post
+//@route 	DELETE api/posts/contact/:id/:offer_id
+//@desc 	DELETE an offer from a post
 //access 	Private
-router.delete('/bid/:id/:bid_id', passport.authenticate('jwt', {session: false}), (req, res) =>{
+router.delete('/contact/:id/:offer_id', passport.authenticate('jwt', {session: false}), (req, res) =>{
 	Post.findById(req.params.id)
 		.then(post =>{
 			
 			//Check if the bid exists in the database
-			if(post.bids.filter(bid => bid._id.toString() === req.params.bid_id).length === 0 ){
+			if(post.offers.filter(offer => offer._id.toString() === req.params.offer_id).length === 0 ){
 				
 				return res.status(404).json({error: 'No bid found with that id'})
 			}
 
 			//Get delete index
-			const deleteIndex = post.bids
+			const deleteIndex = post.offers
 				.map(item => item._id.toString())
-				.indexOf(req.params.bid_id)
+				.indexOf(req.params.offer_id)
 
 			//Splice bid from the bids array
-			post.bids.splice(deleteIndex, 1)
+			post.offers.splice(deleteIndex, 1)
 
 			//Save the post in order to update the bids list
 			post.save().then(post => res.json(post))

@@ -24,7 +24,7 @@ const PostSchema = new Schema({
 		required: true
 	},
 	asked_price:{
-		type: Number,
+		type: String,
 		required: true
 	},
 	city:{
@@ -38,7 +38,7 @@ const PostSchema = new Schema({
 			}
 		}
 	],
-	bids:[
+	offers:[
 		{
 			user: {
 				type: Schema.Types.ObjectId,
@@ -48,7 +48,7 @@ const PostSchema = new Schema({
 				type: String
 			},
 			value:{
-				type: Number,
+				type: String,
 				required: true
 			},
 			text:{

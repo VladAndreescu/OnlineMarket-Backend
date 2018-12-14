@@ -24,15 +24,15 @@ module.exports = function validatePostInput(data){
 	}
 
 	if(Validator.isEmpty(data.item_condition)){
-		errors.item_condition = 'item_condition field cannot be empty!'
+		errors.item_condition = 'Item condition field cannot be empty!'
 	}
 
 	if(Validator.isEmpty(data.asked_price)){
-		errors.asked_price = 'asked_price field cannot be empty!'
+		errors.asked_price = 'Price field cannot be empty!'
 	}
 
 	if(Validator.isEmpty(data.city)){
-		errors.city = 'city field cannot be empty!'
+		errors.city = 'City field cannot be empty!'
 	}
 
 
