@@ -92,7 +92,7 @@ router.post('/login', (req, res) =>{
 					if(isMatch){
 
 						//User matched create payload
-						const payload = {id: user.id, name: user.name}
+						const payload = {id: user.id, name: user.name, admin: user.admin}
 
 						//Create the Sign Token - should expire in 1 hour for security reasons
 						jwt.sign(payload, keys.secretOrKey, {expiresIn: 3600}, (err, token) =>{
@@ -118,7 +118,8 @@ router.get('/currentUser', passport.authenticate('jwt', {session: false}), (req,
 	res.json({
 		id: req.user.id,
 		name: req.user.name,
-		email: req.user.email
+		email: req.user.email,
+		admin: req.user.admin
 
 	})
 })
