@@ -6,6 +6,8 @@ const isEmpty = require('../validation/isEmpty')
 module.exports = function validateUserRegistrationInput(data){
 	let errors = {}
 
+	//check to see if the data provided is not empty
+	// if it is convert it into a string
 	data.name = !isEmpty(data.name) ? data.name : ''
 	data.email = !isEmpty(data.email) ? data.email : ''
 	data.password = !isEmpty(data.password) ? data.password : ''

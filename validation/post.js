@@ -7,7 +7,8 @@ module.exports = function validatePostInput(data){
 	let errors = {}
 
 
-	
+	//check to see if the data provided is not empty
+	// if it is convert it into a string
 	data.category= !isEmpty(data.category) ? data.category : ''
 	data.description= !isEmpty(data.description) ? data.description : ''
 	data.item_condition= !isEmpty(data.item_condition) ? data.item_condition : ''

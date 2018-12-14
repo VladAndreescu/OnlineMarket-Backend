@@ -34,6 +34,7 @@ router.post('/register', (req,res) =>{
 	User.findOne({email: req.body.email})
 		.then(user =>{
 			if(user !== null){
+				//if the email is laready in database throw status 400 and a specific error message
 				errors.email = 'Email already exists'
 				return res.status(400).json(errors)
 			}else{
@@ -49,8 +50,9 @@ router.post('/register', (req,res) =>{
 						if(err){
 							throw err
 						}
-
+						//save the hashed password into newUser's password
 						newUser.password = hash;
+						//save the user and return the object which contains user's information
 						newUser.save()
 							.then(user =>res.json(user))
 							.catch(err => console.log(err))
@@ -83,6 +85,7 @@ router.post('/login', (req, res) =>{
 	User.findOne({email})
 		.then(user =>{
 			if(user === null){
+				//if there is no user with email provided throw status 404 and a specific error message
 				errors.email = 'User not found'
 				return res.status(404).json(errors)
 			}
@@ -103,6 +106,7 @@ router.post('/login', (req, res) =>{
 							})
 						})
 					}else{
+						//if the passwords do not match throw status 404 with a specific error message
 						errors.password = 'Password incorrect'
 						return res.status(404).json(errors)
 					}
@@ -115,6 +119,8 @@ router.post('/login', (req, res) =>{
 //@acccess 	Private
 
 router.get('/currentUser', passport.authenticate('jwt', {session: false}), (req, res) =>{
+	//test to check if the authentication is working as it should
+	//display the object containing the information about the current logged in user
 	res.json({
 		id: req.user.id,
 		name: req.user.name,
