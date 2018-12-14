@@ -1,4 +1,4 @@
-//Creating a global function isEmpty which check if the values are empty or not
+//Creating a Backend global function isEmpty which check if the values are empty or not
 
 const  isEmpty = (value) => 
 
